@@ -1,36 +1,117 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Travel Planner Application
+
+An interactive travel itinerary planning application built with Next.js, MongoDB, and NextAuth. This application allows users to create, view, and modify travel itineraries with maps integration and real-time weather data.
+
+## Features
+
+- **User Authentication**: Secure JWT-based authentication with NextAuth
+- **Itinerary Management**: Create, read, update, and delete travel itineraries
+- **Interactive Maps**: Visualize travel destinations with Mapbox integration
+- **Weather Information**: Get real-time weather data for your destinations
+- **Nearby Attractions**: Discover points of interest near your planned locations
+- **Responsive Design**: Works on desktop and mobile devices
+
+## Tech Stack
+
+- **Frontend**: Next.js, React, Tailwind CSS
+- **Backend**: Next.js API Routes, Server Actions
+- **Database**: MongoDB with Mongoose ODM
+- **Authentication**: NextAuth.js with JWT
+- **Maps**: Mapbox GL JS
+- **Weather**: OpenWeatherMap API
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- Node.js 18.x or higher
+- MongoDB database (local or Atlas)
+- Mapbox API key
+- OpenWeatherMap API key
+
+### Installation
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/yourusername/travel-planner.git
+   cd travel-planner
+   ```
+
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+3. Create a `.env.local` file in the root directory with the following variables:
+   ```
+   # MongoDB Connection
+   MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/travelplanner
+
+   # NextAuth Configuration
+   NEXTAUTH_URL=http://localhost:3000
+   NEXTAUTH_SECRET=your-nextauth-secret-key
+
+   # Mapbox API Key
+   NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN=your-mapbox-access-token
+   MAPBOX_ACCESS_TOKEN=your-mapbox-access-token
+
+   # OpenWeatherMap API Key
+   OPENWEATHER_API_KEY=your-openweather-api-key
+   ```
+
+4. Run the development server:
+   ```bash
+   npm run dev
+   ```
+
+5. Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+## Project Structure
+
+```
+/src
+  /app                 # Next.js App Router
+    /api               # API Routes
+      /auth            # Authentication API
+      /itineraries     # Itinerary CRUD operations
+      /weather         # Weather API
+      /places          # Places/POI API
+    /dashboard         # User dashboard
+    /itinerary         # Itinerary pages
+    /login             # Login page
+    /register          # Registration page
+  /components          # Reusable components
+  /lib                 # Utility functions and database connection
+  /models              # Mongoose models
+  /providers           # Context providers
+  /types               # TypeScript type definitions
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## API Routes
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- **Authentication**:
+  - `POST /api/auth/[...nextauth]` - NextAuth authentication
+  - `POST /api/register` - User registration
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- **Itineraries**:
+  - `GET /api/itineraries` - Get all itineraries for the authenticated user
+  - `POST /api/itineraries` - Create a new itinerary
+  - `GET /api/itineraries/:id` - Get a specific itinerary
+  - `PUT /api/itineraries/:id` - Update an itinerary
+  - `DELETE /api/itineraries/:id` - Delete an itinerary
 
-## Learn More
+- **External Services**:
+  - `GET /api/weather` - Get weather data for a location
+  - `GET /api/places` - Get nearby places for a location
 
-To learn more about Next.js, take a look at the following resources:
+## License
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+This project is licensed under the MIT License - see the LICENSE file for details.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Acknowledgments
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- [Next.js](https://nextjs.org/)
+- [MongoDB](https://www.mongodb.com/)
+- [NextAuth.js](https://next-auth.js.org/)
+- [Mapbox](https://www.mapbox.com/)
+- [OpenWeatherMap](https://openweathermap.org/)
