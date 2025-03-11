@@ -17,7 +17,7 @@ export async function GET(
       );
     }
 
-    const id = req.nextUrl.pathname.split("/")[5];
+    const id = req.nextUrl.pathname.split("/")[3];
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return Response.json(
@@ -68,7 +68,7 @@ export async function PUT(
       );
     }
 
-    const id = req.nextUrl.pathname.split("/")[2];
+    const id = req.nextUrl.pathname.split("/")[3];
     const body = await req.json();
     const { title, description, startDate, endDate, locations } = body;
 
@@ -134,8 +134,7 @@ export async function PUT(
 }
 
 export async function DELETE(
-  req: Request,
-  { params }: { params: { id: string } }
+  req: NextRequest,
 ) {
   try {
     const session = await getServerSession(authOptions);
@@ -147,7 +146,7 @@ export async function DELETE(
       );
     }
 
-    const id = params.id;
+    const id = req.nextUrl.pathname.split("/")[3];
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return Response.json(
