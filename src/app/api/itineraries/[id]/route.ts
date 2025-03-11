@@ -3,28 +3,24 @@ import dbConnect from '@/lib/mongoose';
 import Itinerary from '@/models/Itinerary';
 import mongoose from 'mongoose';
 import { getServerSession } from 'next-auth/next';
-
-import { type NextRequest } from 'next/server';
-import { NextResponse } from 'next/server';
-
+import { NextRequest } from 'next/server';
 export async function GET(
-  request: NextRequest,
-  context: { params: { id: string } }
+  req: NextRequest, 
 ) {
   try {
     const session = await getServerSession(authOptions);
 
     if (!session || !session.user) {
-      return NextResponse.json(
+      return Response.json(
         { message: 'Unauthorized' },
         { status: 401 }
       );
     }
 
-    const id = context.params.id;
+    const id = req.nextUrl.pathname.split("/")[5];
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
-      return NextResponse.json(
+      return Response.json(
         { message: 'Invalid itinerary ID' },
         { status: 400 }
       );
@@ -35,7 +31,7 @@ export async function GET(
     const itinerary = await Itinerary.findById(id);
 
     if (!itinerary) {
-      return NextResponse.json(
+      return Response.json(
         { message: 'Itinerary not found' },
         { status: 404 }
       );
@@ -43,16 +39,16 @@ export async function GET(
 
     // Check if the itinerary belongs to the authenticated user
     if (itinerary.userId.toString() !== session.user.id) {
-      return NextResponse.json(
+      return Response.json(
         { message: 'Unauthorized' },
         { status: 403 }
       );
     }
 
-    return NextResponse.json(itinerary);
+    return Response.json(itinerary);
   } catch (error) {
     console.error('Error fetching itinerary:', error);
-    return NextResponse.json(
+    return Response.json(
       { message: 'Error fetching itinerary' },
       { status: 500 }
     );
@@ -60,25 +56,24 @@ export async function GET(
 }
 
 export async function PUT(
-  request: NextRequest,
-  context: { params: { id: string } }
+  req: NextRequest,
 ) {
   try {
     const session = await getServerSession(authOptions);
 
     if (!session || !session.user) {
-      return NextResponse.json(
+      return Response.json(
         { message: 'Unauthorized' },
         { status: 401 }
       );
     }
 
-    const id = context.params.id;
-    const body = await request.json();
+    const id = req.nextUrl.pathname.split("/")[2];
+    const body = await req.json();
     const { title, description, startDate, endDate, locations } = body;
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
-      return NextResponse.json(
+      return Response.json(
         { message: 'Invalid itinerary ID' },
         { status: 400 }
       );
@@ -86,7 +81,7 @@ export async function PUT(
 
     // Validate input
     if (!title || !startDate || !endDate) {
-      return NextResponse.json(
+      return Response.json(
         { message: 'Missing required fields' },
         { status: 400 }
       );
@@ -98,7 +93,7 @@ export async function PUT(
     const itinerary = await Itinerary.findById(id);
 
     if (!itinerary) {
-      return NextResponse.json(
+      return Response.json(
         { message: 'Itinerary not found' },
         { status: 404 }
       );
@@ -106,7 +101,7 @@ export async function PUT(
 
     // Check if the itinerary belongs to the authenticated user
     if (itinerary.userId.toString() !== session.user.id) {
-      return NextResponse.json(
+      return Response.json(
         { message: 'Unauthorized' },
         { status: 403 }
       );
@@ -125,13 +120,13 @@ export async function PUT(
       { new: true }
     );
 
-    return NextResponse.json({
+    return Response.json({
       message: 'Itinerary updated successfully',
       itinerary: updatedItinerary,
     });
   } catch (error) {
     console.error('Error updating itinerary:', error);
-    return NextResponse.json(
+    return Response.json(
       { message: 'Error updating itinerary' },
       { status: 500 }
     );
@@ -139,23 +134,23 @@ export async function PUT(
 }
 
 export async function DELETE(
-  request: NextRequest,
-  context: { params: { id: string } }
+  req: Request,
+  { params }: { params: { id: string } }
 ) {
   try {
     const session = await getServerSession(authOptions);
 
     if (!session || !session.user) {
-      return NextResponse.json(
+      return Response.json(
         { message: 'Unauthorized' },
         { status: 401 }
       );
     }
 
-    const id = context.params.id;
+    const id = params.id;
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
-      return NextResponse.json(
+      return Response.json(
         { message: 'Invalid itinerary ID' },
         { status: 400 }
       );
@@ -167,7 +162,7 @@ export async function DELETE(
     const itinerary = await Itinerary.findById(id);
 
     if (!itinerary) {
-      return NextResponse.json(
+      return Response.json(
         { message: 'Itinerary not found' },
         { status: 404 }
       );
@@ -175,7 +170,7 @@ export async function DELETE(
 
     // Check if the itinerary belongs to the authenticated user
     if (itinerary.userId.toString() !== session.user.id) {
-      return NextResponse.json(
+      return Response.json(
         { message: 'Unauthorized' },
         { status: 403 }
       );
@@ -184,12 +179,12 @@ export async function DELETE(
     // Delete the itinerary
     await Itinerary.findByIdAndDelete(id);
 
-    return NextResponse.json({
+    return Response.json({
       message: 'Itinerary deleted successfully',
     });
   } catch (error) {
     console.error('Error deleting itinerary:', error);
-    return NextResponse.json(
+    return Response.json(
       { message: 'Error deleting itinerary' },
       { status: 500 }
     );
