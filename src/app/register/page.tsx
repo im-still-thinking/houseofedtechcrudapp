@@ -49,10 +49,15 @@ export default function RegisterPage() {
         // Redirect to login page on successful registration
         router.push('/login?registered=true');
       }
-    } catch (err: any) {
+    } catch (err: Error | unknown) {
       console.error('Registration error:', err);
-      if (err.response?.data?.message) {
-        setError(err.response.data.message);
+      if (typeof err === 'object' && err && 'response' in err) {
+        const apiError = err as { response?: { data?: { message?: string } } };
+        if (apiError.response?.data?.message) {
+          setError(apiError.response.data.message);
+        } else {
+          setError('An error occurred during registration');
+        }
       } else {
         setError('An error occurred during registration');
       }
