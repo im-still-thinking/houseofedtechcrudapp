@@ -19,8 +19,19 @@ interface Location {
   };
   visitDate?: string;
   notes?: string;
-  weatherData?: any;
-  nearbyAttractions?: any[];
+  weatherData?: {
+    temperature?: number;
+    conditions?: string;
+    icon?: string;
+    [key: string]: unknown;
+  };
+  nearbyAttractions?: Array<{
+    name: string;
+    address?: string;
+    category?: string;
+    distance?: number;
+    [key: string]: unknown;
+  }>;
 }
 
 interface Itinerary {
@@ -34,7 +45,7 @@ interface Itinerary {
 }
 
 export default function ItineraryDetailPage() {
-  const { data: session, status } = useSession();
+  const { status } = useSession();
   const router = useRouter();
   const params = useParams();
   const id = params.id as string;
@@ -124,10 +135,15 @@ export default function ItineraryDetailPage() {
         setEditMode(false);
         setError('');
       }
-    } catch (err: any) {
+    } catch (err: Error | unknown) {
       console.error('Error updating itinerary:', err);
-      if (err.response?.data?.message) {
-        setError(err.response.data.message);
+      if (typeof err === 'object' && err && 'response' in err) {
+        const apiError = err as { response?: { data?: { message?: string } } };
+        if (apiError.response?.data?.message) {
+          setError(apiError.response.data.message);
+        } else {
+          setError('An error occurred while updating the itinerary');
+        }
       } else {
         setError('An error occurred while updating the itinerary');
       }

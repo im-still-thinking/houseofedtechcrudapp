@@ -22,6 +22,27 @@ export interface LocationData {
   notes?: string;
 }
 
+// Define interfaces for search results and nearby places
+interface MapboxFeature {
+  id: string;
+  place_name: string;
+  center: [number, number];
+  text: string;
+  properties: Record<string, unknown>;
+  [key: string]: unknown;
+}
+
+interface NearbyPlace {
+  id: string;
+  text: string;
+  place_name?: string;
+  address?: string;
+  category?: string;
+  distance?: number;
+  center?: [number, number];
+  [key: string]: unknown;
+}
+
 export default function LocationForm({
   onSave,
   initialData,
@@ -41,9 +62,9 @@ export default function LocationForm({
   );
   
   const [searchQuery, setSearchQuery] = useState('');
-  const [searchResults, setSearchResults] = useState<any[]>([]);
+  const [searchResults, setSearchResults] = useState<MapboxFeature[]>([]);
   const [isSearching, setIsSearching] = useState(false);
-  const [nearbyPlaces, setNearbyPlaces] = useState<any[]>([]);
+  const [nearbyPlaces, setNearbyPlaces] = useState<NearbyPlace[]>([]);
   const [isLoadingNearby, setIsLoadingNearby] = useState(false);
 
   // Search for locations using Mapbox Geocoding API
@@ -93,7 +114,7 @@ export default function LocationForm({
   }, [location.coordinates]);
 
   // Handle location selection from search results
-  const handleSelectLocation = (result: any) => {
+  const handleSelectLocation = (result: MapboxFeature) => {
     const [lng, lat] = result.center;
     setLocation({
       ...location,
@@ -120,16 +141,17 @@ export default function LocationForm({
   };
 
   // Handle adding a nearby place to the location
-  const handleAddNearbyPlace = (place: any) => {
+  const handleAddNearbyPlace = (place: NearbyPlace) => {
     setLocation({
       ...location,
       name: place.text,
-      address: place.place_name,
+      address: place.place_name || place.text,
       coordinates: {
-        lat: place.center[1],
-        lng: place.center[0],
+        lng: place.center ? place.center[0] : location.coordinates.lng,
+        lat: place.center ? place.center[1] : location.coordinates.lat,
       },
     });
+    onCancel();
   };
 
   // Handle form submission
@@ -162,13 +184,19 @@ export default function LocationForm({
               type="button"
               onClick={searchLocations}
               className="absolute right-2 top-2 px-3 py-1 bg-indigo-600 text-white text-sm rounded-md hover:bg-indigo-700"
+              disabled={isSearching}
             >
-              Search
+              {isSearching ? 'Searching...' : 'Search'}
             </button>
           </div>
           
           {/* Search results */}
-          {searchResults.length > 0 && (
+          {isSearching && (
+            <div className="mt-2 p-2 text-center text-gray-600 dark:text-gray-400">
+              Searching locations...
+            </div>
+          )}
+          {!isSearching && searchResults.length > 0 && (
             <div className="mt-2 bg-white border border-gray-300 rounded-md shadow-sm dark:bg-gray-700 dark:border-gray-600">
               <ul>
                 {searchResults.map((result) => (
@@ -273,24 +301,26 @@ export default function LocationForm({
         
         {/* Nearby places */}
         {nearbyPlaces.length > 0 && (
-          <div className="mb-6">
-            <h3 className="text-md font-medium text-gray-800 dark:text-white mb-2">
-              Nearby Places
-            </h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-              {nearbyPlaces.slice(0, 6).map((place) => (
-                <div
-                  key={place.id}
-                  className="p-3 border border-gray-200 rounded-md hover:bg-gray-50 dark:border-gray-700 dark:hover:bg-gray-700 cursor-pointer"
-                  onClick={() => handleAddNearbyPlace(place)}
-                >
-                  <p className="font-medium text-gray-800 dark:text-white">{place.text}</p>
-                  <p className="text-sm text-gray-500 dark:text-gray-400 truncate">
-                    {place.place_name}
-                  </p>
-                </div>
-              ))}
-            </div>
+          <div className="mt-4">
+            <h3 className="text-md font-medium text-gray-800 dark:text-white mb-2">Nearby Places</h3>
+            {isLoadingNearby ? (
+              <p className="text-gray-600 dark:text-gray-400">Loading nearby places...</p>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                {nearbyPlaces.map((place) => (
+                  <div
+                    key={place.id}
+                    className="p-2 border border-gray-200 rounded-md hover:bg-gray-50 dark:border-gray-700 dark:hover:bg-gray-700 cursor-pointer"
+                    onClick={() => handleAddNearbyPlace(place)}
+                  >
+                    <p className="font-medium text-gray-800 dark:text-white">{place.text}</p>
+                    {place.category && (
+                      <p className="text-sm text-gray-500 dark:text-gray-400">{place.category}</p>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         )}
         

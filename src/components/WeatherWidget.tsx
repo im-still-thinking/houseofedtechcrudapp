@@ -1,6 +1,7 @@
 'use client';
 
 import axios from 'axios';
+import Image from 'next/image';
 import { useEffect, useState } from 'react';
 
 interface WeatherWidgetProps {
@@ -112,11 +113,12 @@ export default function WeatherWidget({ latitude, longitude }: WeatherWidgetProp
       
       {/* Current weather */}
       <div className="p-4 flex items-center">
-        <img
+        <Image
           src={`https://openweathermap.org/img/wn/${currentWeather.icon}@2x.png`}
           alt={currentWeather.description}
           width={64}
           height={64}
+          priority
         />
         <div className="ml-4">
           <p className="text-2xl font-bold text-gray-800 dark:text-white">
@@ -156,7 +158,7 @@ export default function WeatherWidget({ latitude, longitude }: WeatherWidgetProp
               <p className="text-xs text-gray-500 dark:text-gray-400">
                 {new Date(day.dt * 1000).toLocaleDateString('en-US', { weekday: 'short' })}
               </p>
-              <img
+              <Image
                 src={`https://openweathermap.org/img/wn/${day.weather[0].icon}.png`}
                 alt={day.weather[0].description}
                 className="mx-auto"

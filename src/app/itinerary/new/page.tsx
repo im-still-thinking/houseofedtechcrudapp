@@ -8,7 +8,7 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 export default function NewItineraryPage() {
-  const { data: session, status } = useSession();
+  const { status } = useSession();
   const router = useRouter();
   
   const [title, setTitle] = useState('');
@@ -76,10 +76,15 @@ export default function NewItineraryPage() {
         // Redirect to dashboard on success
         router.push('/dashboard');
       }
-    } catch (err: any) {
+    } catch (err: Error | unknown) {
       console.error('Error creating itinerary:', err);
-      if (err.response?.data?.message) {
-        setError(err.response.data.message);
+      if (typeof err === 'object' && err && 'response' in err) {
+        const apiError = err as { response?: { data?: { message?: string } } };
+        if (apiError.response?.data?.message) {
+          setError(apiError.response.data.message);
+        } else {
+          setError('An error occurred while creating the itinerary');
+        }
       } else {
         setError('An error occurred while creating the itinerary');
       }
