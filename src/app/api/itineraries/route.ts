@@ -1,4 +1,4 @@
-import { authOptions } from '@/app/api/auth/[...nextauth]/route';
+import { authOptions } from '@/app/api/auth/[...nextauth]/options';
 import dbConnect from '@/lib/mongoose';
 import Itinerary from '@/models/Itinerary';
 import { getServerSession } from 'next-auth/next';
