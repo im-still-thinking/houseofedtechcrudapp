@@ -32,17 +32,20 @@ An interactive travel itinerary planning application built with Next.js, MongoDB
 ### Installation
 
 1. Clone the repository:
+
    ```bash
    git clone https://github.com/yourusername/travel-planner.git
    cd travel-planner
    ```
 
 2. Install dependencies:
+
    ```bash
    npm install
    ```
 
 3. Create a `.env.local` file in the root directory with the following variables:
+
    ```
    # MongoDB Connection
    MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/travelplanner
@@ -60,6 +63,7 @@ An interactive travel itinerary planning application built with Next.js, MongoDB
    ```
 
 4. Run the development server:
+
    ```bash
    npm run dev
    ```
@@ -131,19 +135,23 @@ While we've made the TypeScript configuration more permissive for general develo
 
 - Used type assertion for the MongoDB URI: `const MONGODB_URI = process.env.MONGODB_URI as string`
 - Added proper interface for the cached connection:
+
   ```typescript
   interface MongooseCache {
     conn: typeof mongoose | null;
     promise: Promise<typeof mongoose> | null;
   }
   ```
+
 - Added proper global type declaration:
+
   ```typescript
   declare global {
     // eslint-disable-next-line no-var
     var mongoose: MongooseCache | undefined;
   }
   ```
+
 - Improved error handling with try/catch for the connection promise
 
 ### Best Practices

@@ -96,14 +96,13 @@ export default function WeatherWidget({ latitude, longitude }: WeatherWidgetProp
     );
   }
 
-  // Get the current weather
+
   const current = weatherData.current;
   const currentWeather = current.weather[0];
   
-  // Get the forecast for the next few days (one entry per day)
   const forecast = weatherData.forecast.list
-    .filter((item, index) => index % 8 === 0) // Get one forecast per day (every 24 hours)
-    .slice(0, 3); // Limit to 3 days
+    .filter((item, index) => index % 8 === 0)
+    .slice(0, 3);
 
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden dark:bg-gray-800">

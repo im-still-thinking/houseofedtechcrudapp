@@ -11,7 +11,7 @@ export default function Home() {
         {/* Hero Section */}
         <section className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-20">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex flex-col md:flex-row items-center">
+            <div className="flex flex-col md:flex-row items-center gap-8">
               <div className="md:w-1/2 mb-10 md:mb-0">
                 <h1 className="text-4xl md:text-5xl font-bold mb-4">
                   Plan Your Perfect Trip with TravelPlanner
@@ -42,6 +42,7 @@ export default function Home() {
                     fill
                     style={{ objectFit: 'cover' }}
                     priority
+                    className=""
                   />
                 </div>
               </div>
