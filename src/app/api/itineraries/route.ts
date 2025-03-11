@@ -42,7 +42,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const { title, description, startDate, endDate, locations } = await request.json();
+    const body = await request.json();
+    const { title, description, startDate, endDate, locations } = body;
 
     // Validate input
     if (!title || !startDate || !endDate) {

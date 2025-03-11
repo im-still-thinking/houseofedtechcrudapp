@@ -74,7 +74,8 @@ export async function PUT(
     }
 
     const { id } = params;
-    const { title, description, startDate, endDate, locations } = await request.json();
+    const body = await request.json();
+    const { title, description, startDate, endDate, locations } = body;
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return NextResponse.json(
