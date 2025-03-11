@@ -20,14 +20,12 @@ export const authOptions: NextAuthOptions = {
 
         await dbConnect();
         
-        // Find user by email
         const user = await User.findOne({ email: credentials.email });
         
         if (!user) {
           throw new Error('No user found with this email');
         }
         
-        // Check if password matches
         const isPasswordValid = await bcrypt.compare(credentials.password, user.password);
         
         if (!isPasswordValid) {
@@ -62,7 +60,7 @@ export const authOptions: NextAuthOptions = {
   },
   session: {
     strategy: 'jwt',
-    maxAge: 30 * 24 * 60 * 60, // 30 days
+    maxAge: 30 * 24 * 60 * 60,
   },
   secret: process.env.NEXTAUTH_SECRET,
 }; 

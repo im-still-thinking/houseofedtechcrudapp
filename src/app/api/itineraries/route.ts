@@ -4,7 +4,6 @@ import Itinerary from '@/models/Itinerary';
 import { getServerSession } from 'next-auth/next';
 import { NextRequest, NextResponse } from 'next/server';
 
-// Get all itineraries for the authenticated user
 export async function GET() {
   try {
     const session = await getServerSession(authOptions);
@@ -30,7 +29,6 @@ export async function GET() {
   }
 }
 
-// Create a new itinerary
 export async function POST(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions);
@@ -45,7 +43,6 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { title, description, startDate, endDate, locations } = body;
 
-    // Validate input
     if (!title || !startDate || !endDate) {
       return NextResponse.json(
         { message: 'Missing required fields' },
@@ -55,7 +52,6 @@ export async function POST(request: NextRequest) {
 
     await dbConnect();
 
-    // Create new itinerary
     const newItinerary = await Itinerary.create({
       userId: session.user.id,
       title,
