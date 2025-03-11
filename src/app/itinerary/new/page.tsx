@@ -202,7 +202,7 @@ export default function NewItineraryPage() {
                 {locations.length === 0 ? (
                   <div className="text-center py-8 border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-md">
                     <p className="text-gray-500 dark:text-gray-400">
-                      No locations added yet. Click "Add Location" to start building your itinerary.
+                      No locations added yet. Click &quot;Add Location&quot; to start building your itinerary.
                     </p>
                   </div>
                 ) : (

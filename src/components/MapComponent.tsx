@@ -27,8 +27,7 @@ export default function MapComponent({
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<mapboxgl.Map | null>(null);
   const [mapLoaded, setMapLoaded] = useState(false);
-
-  // Initialize map
+  
   useEffect(() => {
     if (!mapContainer.current) return;
 
@@ -43,6 +42,7 @@ export default function MapComponent({
 
     map.current.on('load', () => {
       setMapLoaded(true);
+      
     });
 
     if (onMapClick) {
@@ -58,15 +58,12 @@ export default function MapComponent({
     };
   }, [latitude, longitude, zoom, onMapClick]);
 
-  // Add markers when map is loaded or markers change
   useEffect(() => {
     if (!mapLoaded || !map.current) return;
 
-    // Clear existing markers
     const existingMarkers = document.querySelectorAll('.mapboxgl-marker');
     existingMarkers.forEach((marker) => marker.remove());
 
-    // Add new markers
     markers.forEach((marker) => {
       const markerElement = document.createElement('div');
       markerElement.className = 'marker';
