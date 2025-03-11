@@ -5,11 +5,10 @@ import mongoose from 'mongoose';
 import { getServerSession } from 'next-auth/next';
 import { NextRequest, NextResponse } from 'next/server';
 
+type Params = { params: { id: string } };
+
 // Get a specific itinerary by ID
-export async function GET(
-  request: NextRequest,
-  context: { params: { id: string } }
-) {
+export async function GET(request: NextRequest, params: Params) {
   try {
     const session = await getServerSession(authOptions);
 
@@ -20,7 +19,7 @@ export async function GET(
       );
     }
 
-    const { id } = context.params;
+    const id = params.params.id;
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return NextResponse.json(
@@ -59,10 +58,7 @@ export async function GET(
 }
 
 // Update a specific itinerary by ID
-export async function PUT(
-  request: NextRequest,
-  context: { params: { id: string } }
-) {
+export async function PUT(request: NextRequest, params: Params) {
   try {
     const session = await getServerSession(authOptions);
 
@@ -73,7 +69,7 @@ export async function PUT(
       );
     }
 
-    const { id } = context.params;
+    const id = params.params.id;
     const body = await request.json();
     const { title, description, startDate, endDate, locations } = body;
 
@@ -139,10 +135,7 @@ export async function PUT(
 }
 
 // Delete a specific itinerary by ID
-export async function DELETE(
-  request: NextRequest,
-  context: { params: { id: string } }
-) {
+export async function DELETE(request: NextRequest, params: Params) {
   try {
     const session = await getServerSession(authOptions);
 
@@ -153,7 +146,7 @@ export async function DELETE(
       );
     }
 
-    const { id } = context.params;
+    const id = params.params.id;
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return NextResponse.json(
