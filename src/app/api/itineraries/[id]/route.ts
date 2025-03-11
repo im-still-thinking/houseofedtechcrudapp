@@ -8,7 +8,7 @@ import { NextRequest, NextResponse } from 'next/server';
 // Get a specific itinerary by ID
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: { id: string } }
 ) {
   try {
     const session = await getServerSession(authOptions);
@@ -20,7 +20,7 @@ export async function GET(
       );
     }
 
-    const { id } = params;
+    const { id } = context.params;
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return NextResponse.json(
@@ -61,7 +61,7 @@ export async function GET(
 // Update a specific itinerary by ID
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: { id: string } }
 ) {
   try {
     const session = await getServerSession(authOptions);
@@ -73,7 +73,7 @@ export async function PUT(
       );
     }
 
-    const { id } = params;
+    const { id } = context.params;
     const body = await request.json();
     const { title, description, startDate, endDate, locations } = body;
 
@@ -141,7 +141,7 @@ export async function PUT(
 // Delete a specific itinerary by ID
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: { id: string } }
 ) {
   try {
     const session = await getServerSession(authOptions);
@@ -153,7 +153,7 @@ export async function DELETE(
       );
     }
 
-    const { id } = params;
+    const { id } = context.params;
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return NextResponse.json(
